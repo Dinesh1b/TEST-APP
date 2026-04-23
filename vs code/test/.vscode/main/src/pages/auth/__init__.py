@@ -1,1 +1,0 @@
-"""Authentication page objects."""
