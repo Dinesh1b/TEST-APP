@@ -1,5 +1,14 @@
 {
+  "builds": [
+    {
+      "src": "qa_runner/app.py",
+      "use": "@vercel/python"
+    }
+  ],
   "routes": [
-    { "src": "/", "dest": "/index.html" }
+    {
+      "src": "/(.*)",
+      "dest": "qa_runner/app.py"
+    }
   ]
 }
