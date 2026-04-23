@@ -1,14 +1,3 @@
 {
-  "builds": [
-    {
-      "src": "qa_runner/app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "qa_runner/app.py"
-    }
-  ]
+  "builds": [...]
 }
