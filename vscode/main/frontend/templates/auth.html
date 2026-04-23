@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Q-A Runner</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+/* ════════════════════════════════════
+   THEME TOKENS
+════════════════════════════════════ */
+:root {
+  --font-ui:   'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --mesh-a: rgba(199,210,254,0.75);
+  --mesh-b: rgba(221,214,254,0.65);
+  --mesh-c: rgba(186,230,252,0.55);
+  --mesh-d: rgba(167,243,208,0.4);
+  --mesh-base: linear-gradient(135deg,#eef2ff 0%,#ede9fe 40%,#e0f2fe 70%,#ecfdf5 100%);
+  --bg-body:        #eef2ff;
+  --glass-1:        rgba(255,255,255,0.65);
+  --glass-2:        rgba(255,255,255,0.80);
+  --glass-3:        rgba(255,255,255,0.45);
+  --glass-4:        rgba(255,255,255,0.30);
+  --glass-border:     rgba(255,255,255,0.88);
+  --glass-border-dim: rgba(255,255,255,0.55);
+  --shadow-sm: 0 2px 10px rgba(79,84,167,0.08),0 1px 3px rgba(79,84,167,0.05);
+  --shadow-md: 0 6px 24px rgba(79,84,167,0.12),0 2px 8px rgba(79,84,167,0.07);
+  --shadow-lg: 0 14px 48px rgba(79,84,167,0.16),0 4px 16px rgba(79,84,167,0.09);
+  --t0: #1a1b3a; --t1: #2d3058; --t2: #505580; --t3: #8087a8; --t4: #b4b9d0; --t5: #dde1f0;
+  --accent:      #6366f1;
+  --accent-soft: rgba(99,102,241,0.12);
+  --accent-glow: rgba(99,102,241,0.28);
+  --accent-btn:  linear-gradient(135deg,#818cf8 0%,#6366f1 60%,#4f46e5 100%);
+  --violet:      #8b5cf6;
+  --violet-soft: rgba(139,92,246,0.12);
+  --violet-glow: rgba(139,92,246,0.28);
+  --sky:          #0ea5e9;
+  --sky-soft:     rgba(14,165,233,0.12);
+  --emerald:      #10b981;
+  --emerald-soft: rgba(16,185,129,0.12);
+  --amber:        #f59e0b;
+  --amber-soft:   rgba(245,158,11,0.1);
+  --rose:         #f43f5e;
+  --rose-soft:    rgba(244,63,94,0.1);
+  --input-bg:           rgba(255,255,255,0.6);
+  --input-border:       rgba(99,102,241,0.15);
+  --input-focus-border: rgba(99,102,241,0.5);
+  --input-focus-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+  --term-bg: #0d1117;
+  --nav-glass: rgba(255,255,255,0.82);
+  --r:    12px; --r-lg: 18px; --r-xl: 24px;
+  --trans: all 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="dark"] {
+  --mesh-a: rgba(67,56,202,0.2);
+  --mesh-b: rgba(109,40,217,0.18);
+  --mesh-c: rgba(7,89,133,0.2);
+  --mesh-d: rgba(6,95,70,0.15);
+  --mesh-base: linear-gradient(135deg,#0f1029 0%,#130f2a 40%,#081527 70%,#061a12 100%);
+  --bg-body:        #0c0d1f;
+  --glass-1:        rgba(255,255,255,0.05);
+  --glass-2:        rgba(255,255,255,0.09);
+  --glass-3:        rgba(255,255,255,0.03);
+  --glass-4:        rgba(255,255,255,0.02);
+  --glass-border:     rgba(255,255,255,0.10);
+  --glass-border-dim: rgba(255,255,255,0.06);
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.3),0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 6px 24px rgba(0,0,0,0.4),0 2px 8px rgba(0,0,0,0.25);
+  --shadow-lg: 0 14px 48px rgba(0,0,0,0.5),0 4px 16px rgba(0,0,0,0.3);
+  --t0: #f0f1ff; --t1: #c8cbee; --t2: #8b90c0; --t3: #565a88; --t4: #2e3160; --t5: #1a1d3a;
+  --accent:      #818cf8;
+  --accent-soft: rgba(129,140,248,0.15);
+  --accent-glow: rgba(129,140,248,0.35);
+  --accent-btn:  linear-gradient(135deg,#a5b4fc 0%,#818cf8 60%,#6366f1 100%);
+  --violet:      #a78bfa;
+  --violet-soft: rgba(167,139,250,0.15);
+  --violet-glow: rgba(167,139,250,0.35);
+  --sky:          #38bdf8;
+  --sky-soft:     rgba(56,189,248,0.15);
+  --emerald:      #34d399;
+  --emerald-soft: rgba(52,211,153,0.15);
+  --amber:        #fbbf24;
+  --amber-soft:   rgba(251,191,36,0.12);
+  --rose:         #fb7185;
+  --rose-soft:    rgba(251,113,133,0.12);
+  --input-bg:           rgba(255,255,255,0.05);
+  --input-border:       rgba(255,255,255,0.1);
+  --input-focus-border: rgba(129,140,248,0.5);
+  --input-focus-shadow: 0 0 0 3px rgba(129,140,248,0.12);
+  --term-bg: #080c10;
+  --nav-glass: rgba(12,13,31,0.88);
+}
+
+html,body { height:100%;overflow:hidden; }
+body { font-family:var(--font-ui);font-size:14px;color:var(--t1);line-height:1.5;transition:color 0.3s,background 0.3s; }
+
+/* ── ANIMATED MESH BG ── */
+.bg-mesh { position:fixed;inset:0;z-index:0;background:var(--mesh-base);transition:background 0.5s; }
+.bg-mesh::before {
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%,var(--mesh-a) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 70% at 88% 12%,var(--mesh-b) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 88%,var(--mesh-c) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 18% 78%,var(--mesh-d) 0%,transparent 55%);
+  animation:meshDrift 20s ease-in-out infinite alternate;
+}
+@keyframes meshDrift {
+  0%  { transform:scale(1)    translateY(0);    filter:hue-rotate(0deg);  }
+  50% { transform:scale(1.03) translateY(-12px);filter:hue-rotate(10deg); }
+  100%{ transform:scale(1)    translateY(0);    filter:hue-rotate(-6deg); }
+}
+.orb { position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:orbFloat var(--dur,16s) ease-in-out infinite alternate; }
+.orb-1 { width:500px;height:500px;top:-150px;right:-100px;background:radial-gradient(circle,var(--mesh-b) 0%,transparent 70%);--dur:14s; }
+.orb-2 { width:380px;height:380px;bottom:-80px;left:-80px;background:radial-gradient(circle,var(--mesh-c) 0%,transparent 70%);--dur:18s; }
+@keyframes orbFloat { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(30px,40px) scale(1.12)} }
+
+/* ── TOPNAV ── */
+.nav {
+  position:fixed;top:0;left:0;right:0;height:62px;
+  background:var(--nav-glass);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
+  border-bottom:1px solid var(--glass-border);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;padding:0 24px;gap:14px;z-index:600;
+  transition:background 0.35s,border-color 0.35s;
+}
+.logo { display:flex;align-items:center;gap:12px; }
+.logo-gem {
+  width:38px;height:38px;border-radius:11px;background:var(--accent-btn);
+  box-shadow:0 4px 14px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,0.3);
+  display:grid;place-items:center;font-family:var(--font-mono);font-size:11px;font-weight:500;color:#fff;
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.logo-gem::after { content:'';position:absolute;top:0;left:0;right:0;height:48%;background:linear-gradient(to bottom,rgba(255,255,255,0.2),transparent);border-radius:11px 11px 0 0; }
+.logo-name { font-weight:800;font-size:16px;color:var(--t0);letter-spacing:-.03em; }
+.logo-name em { color:var(--accent);font-style:normal; }
+.logo-sub { font-family:var(--font-mono);font-size:8.5px;font-weight:400;color:var(--t3);letter-spacing:.08em;text-transform:uppercase; }
+.nav-right { margin-left:auto;display:flex;align-items:center;gap:10px; }
+.theme-btn { display:flex;align-items:center;background:var(--glass-3);border:1px solid var(--glass-border-dim);border-radius:20px;padding:3px;cursor:pointer; }
+.theme-seg { font-family:var(--font-mono);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:16px;border:none;background:transparent;color:var(--t3);cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:5px; }
+.theme-seg:hover { color:var(--t2); }
+.theme-seg.active { background:var(--glass-2);color:var(--t1);box-shadow:var(--shadow-sm); }
+
+/* ── PAGE WRAPPER ── */
+.auth-wrap {
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:80px 20px 40px;
+}
+
+/* ── AUTH CARD ── */
+.auth-card {
+  width:100%;max-width:440px;
+  background:var(--glass-1);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--glass-border);border-radius:var(--r-xl);
+  box-shadow:var(--shadow-lg);overflow:hidden;
+  animation:slideUp 0.32s cubic-bezier(0.4,0,0.2,1) both;
+}
+.auth-card.wide { max-width:480px; }
+
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes spin    { to{transform:rotate(360deg)} }
+
+.auth-head {
+  padding:28px 28px 20px;border-bottom:1px solid var(--glass-border-dim);background:var(--glass-3);
+}
+.auth-badge {
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);padding:5px 13px;border-radius:20px;
+  background:var(--accent-soft);border:1px solid rgba(99,102,241,0.22);margin-bottom:14px;
+}
+.auth-badge-dot { width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0; }
+.auth-title { font-weight:800;font-size:22px;color:var(--t0);letter-spacing:-.03em;line-height:1.2;margin-bottom:5px; }
+.auth-title em { color:var(--accent);font-style:normal; }
+.auth-sub { font-size:13px;color:var(--t3);line-height:1.5; }
+.auth-sub strong { color:var(--t2);font-weight:600; }
+
+.auth-body { padding:24px 28px 28px;display:flex;flex-direction:column;gap:16px; }
+
+/* ── FIELD ── */
+.fld { display:flex;flex-direction:column;gap:5px; }
+.fld-lbl { font-family:var(--font-mono);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3); }
+.req { color:var(--rose); }
+.fld-hint { font-size:11.5px;color:var(--t4);margin-top:2px;line-height:1.45; }
+
+.input-wrap { position:relative; }
+input[type=text],input[type=email],input[type=password],input[type=number] {
+  background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;
+  color:var(--t0);font-family:var(--font-mono);font-size:12px;
+  padding:10px 13px;outline:none;width:100%;
+  transition:var(--trans);box-shadow:var(--shadow-sm);
+}
+input:focus { border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow);background:var(--glass-2); }
+input::placeholder { color:var(--t4); }
+.input-icon { position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t4);pointer-events:none; }
+.input-toggle {
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:var(--t4);cursor:pointer;font-family:var(--font-mono);font-size:8px;
+  text-transform:uppercase;padding:3px 7px;border-radius:6px;
+  border:1px solid var(--glass-border-dim);background:var(--glass-2);transition:var(--trans);
+}
+.input-toggle:hover { color:var(--t2); }
+
+/* ── PASSWORD STRENGTH ── */
+.pw-strength { display:flex;gap:4px;margin-top:6px; }
+.pw-bar { flex:1;height:3px;border-radius:2px;background:var(--glass-3);transition:background 0.3s; }
+.pw-bar.s1 { background:var(--rose); }
+.pw-bar.s2 { background:var(--amber); }
+.pw-bar.s3 { background:var(--sky); }
+.pw-bar.s4 { background:var(--emerald); }
+.pw-label { font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;color:var(--t4);margin-top:4px;text-align:right;transition:color 0.3s; }
+
+/* ── OTP INPUTS ── */
+.otp-row { display:flex;gap:9px;justify-content:center;margin:4px 0; }
+.otp-input {
+  width:50px;height:58px;text-align:center;
+  font-family:var(--font-mono);font-size:22px;font-weight:500;
+  background:var(--input-bg);border:1.5px solid var(--input-border);
+  border-radius:12px;color:var(--t0);outline:none;
+  transition:var(--trans);box-shadow:var(--shadow-sm);caret-color:var(--accent);
+}
+.otp-input:focus { border-color:var(--input-focus-border);box-shadow:var(--input-focus-shadow);background:var(--glass-2); }
+.otp-input.filled { border-color:rgba(99,102,241,0.35);background:var(--accent-soft); }
+.otp-sep { display:flex;align-items:center;color:var(--t4);font-family:var(--font-mono);font-size:16px; }
+
+/* ── DIVIDER ── */
+.divider { display:flex;align-items:center;gap:12px; }
+.divider-line { flex:1;height:1px;background:var(--glass-border-dim); }
+.divider-txt { font-family:var(--font-mono);font-size:8.5px;color:var(--t4);letter-spacing:.1em; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  width:100%;padding:13px;border-radius:12px;
+  background:var(--accent-btn);border:none;color:#fff;cursor:pointer;
+  font-family:var(--font-ui);font-weight:700;font-size:14px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  box-shadow:0 6px 24px var(--accent-glow);
+  transition:var(--trans);position:relative;overflow:hidden;
+}
+.btn-primary::before { content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);transition:left 0.55s; }
+.btn-primary:hover { box-shadow:0 10px 36px var(--accent-glow);filter:brightness(1.08); }
+.btn-primary:hover::before { left:150%; }
+.btn-primary:disabled { opacity:.38;cursor:not-allowed;filter:none; }
+
+.btn-ghost {
+  width:100%;padding:12px;border-radius:12px;
+  background:var(--glass-2);border:1px solid var(--glass-border);color:var(--t2);cursor:pointer;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--trans);
+}
+.btn-ghost:hover { background:var(--glass-1);box-shadow:var(--shadow-md);color:var(--t0); }
+
+.btn-link { background:none;border:none;cursor:pointer;color:var(--accent);font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.06em;padding:0;transition:var(--trans); }
+.btn-link:hover { color:var(--violet); }
+.btn-link:disabled { opacity:.4;cursor:not-allowed; }
+
+/* ── SPINNER ── */
+.spin { display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite; }
+
+/* ── ALERTS ── */
+.alert { display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:var(--r);font-size:12.5px;line-height:1.5; }
+.alert-err  { background:var(--rose-soft);border:1px solid rgba(244,63,94,0.22);color:var(--rose); }
+.alert-ok   { background:var(--emerald-soft);border:1px solid rgba(16,185,129,0.22);color:var(--emerald); }
+.alert-info { background:var(--accent-soft);border:1px solid rgba(99,102,241,0.22);color:var(--accent); }
+.alert-icon { font-size:15px;flex-shrink:0;margin-top:1px; }
+.alert-body { flex:1; }
+
+/* ── FOOTER LINKS ── */
+.auth-foot {
+  padding:14px 28px 20px;border-top:1px solid var(--glass-border-dim);background:var(--glass-4);
+  display:flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;color:var(--t3);
+}
+.auth-foot a { color:var(--accent);font-weight:600;text-decoration:none;cursor:pointer;transition:var(--trans); }
+.auth-foot a:hover { color:var(--violet); }
+
+/* ── CHECKLIST ── */
+.pw-rules { display:flex;flex-direction:column;gap:5px;margin-top:4px; }
+.pw-rule { display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3);transition:color 0.2s; }
+.pw-rule.ok { color:var(--emerald); }
+.pw-rule-dot { width:14px;height:14px;border-radius:50%;border:1.5px solid var(--t4);display:grid;place-items:center;font-size:8px;flex-shrink:0;transition:var(--trans); }
+.pw-rule.ok .pw-rule-dot { background:var(--emerald);border-color:var(--emerald);color:#fff; }
+
+/* ── PROGRESS STEPS ── */
+.step-row { display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px; }
+.step-node { display:flex;flex-direction:column;align-items:center;gap:4px;position:relative; }
+.step-circle {
+  width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:9px;font-weight:500;
+  border:1.5px solid var(--glass-border-dim);background:var(--glass-3);color:var(--t3);
+  transition:var(--trans);flex-shrink:0;
+}
+.step-circle.done   { background:var(--emerald-soft);border-color:rgba(16,185,129,0.3);color:var(--emerald); }
+.step-circle.active { background:var(--accent-btn);border-color:transparent;color:#fff;box-shadow:0 2px 10px var(--accent-glow); }
+.step-label { font-family:var(--font-mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);white-space:nowrap;transition:color 0.2s; }
+.step-label.active { color:var(--accent); }
+.step-line { flex:1;height:1.5px;background:var(--glass-border-dim);margin:0 4px;margin-bottom:20px;min-width:28px; }
+.step-line.done { background:linear-gradient(90deg,var(--emerald),var(--accent)); }
+
+/* ── SUCCESS RING ── */
+.success-ring {
+  width:72px;height:72px;border-radius:20px;margin:0 auto 18px;
+  background:var(--emerald-soft);border:1px solid rgba(16,185,129,0.28);
+  display:grid;place-items:center;font-size:34px;
+  animation:bounceIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes bounceIn { from{opacity:0;transform:scale(0.5)} to{opacity:1;transform:scale(1)} }
+
+/* ── PAGES ── */
+.page { display:none;animation:fadeIn 0.18s ease both; }
+.page.active { display:block; }
+
+/* ── BACK LINK ── */
+.back-link { display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:var(--t3);cursor:pointer;transition:var(--trans);text-decoration:none;margin-bottom:2px; }
+.back-link:hover { color:var(--accent); }
+.back-link svg { transition:transform 0.2s; }
+.back-link:hover svg { transform:translateX(-3px); }
+
+/* ── RESEND TIMER ── */
+.resend-row { text-align:center;font-size:12.5px;color:var(--t3); }
+.resend-count { font-family:var(--font-mono);font-weight:500;color:var(--t2); }
+
+/* ── DEV OTP TOAST ── */
+.dev-toast {
+  display:none;position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:#0d1117;border:1px solid rgba(99,102,241,0.5);
+  border-radius:16px;padding:16px 20px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5),0 0 0 1px rgba(99,102,241,0.15);
+  font-family:var(--font-mono);min-width:270px;
+  animation:toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(20px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+.dev-toast-tag {
+  font-size:8px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(99,102,241,0.8);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.dev-toast-tag::before { content:'';width:6px;height:6px;border-radius:50%;background:#6366f1;flex-shrink:0;animation:devPulse 1.5s ease-in-out infinite; }
+@keyframes devPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.5)} }
+.dev-toast-email { font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.dev-toast-code {
+  font-size:34px;font-weight:600;letter-spacing:10px;color:#fff;
+  text-align:center;padding:10px 0;
+  background:rgba(99,102,241,0.1);border-radius:10px;
+  border:1px solid rgba(99,102,241,0.2);margin-bottom:8px;
+}
+.dev-toast-hint { font-size:9px;color:rgba(255,255,255,0.2);text-align:center;line-height:1.5; }
+.dev-toast-close {
+  position:absolute;top:12px;right:14px;background:none;border:none;
+  color:rgba(255,255,255,0.25);cursor:pointer;font-size:16px;line-height:1;
+  transition:color 0.2s;padding:0;
+}
+.dev-toast-close:hover { color:rgba(255,255,255,0.6); }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-thumb { background:var(--glass-border-dim);border-radius:2px; }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ══════ TOPNAV ══════ -->
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-gem">QA</div>
+    <div>
+      <div class="logo-name">Q<em>-</em>A Runner</div>
+      <div class="logo-sub">Automation Suite</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="theme-btn">
+      <button class="theme-seg active" id="tt-light" onclick="setTheme('light')">☀️ Light</button>
+      <button class="theme-seg"        id="tt-dark"  onclick="setTheme('dark')">🌙 Dark</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGES
+══════════════════════════════════ -->
+<div class="auth-wrap">
+
+  <!-- ════ PAGE: LOGIN ════ -->
+  <div class="page active auth-card" id="pg-login">
+    <div class="auth-head">
+      <div class="auth-badge"><span class="auth-badge-dot"></span>Secure Access</div>
+      <div class="auth-title">Welcome <em>back</em></div>
+      <div class="auth-sub">Sign in to your Q-A Runner account</div>
+    </div>
+    <div class="auth-body">
+      <div id="login-alert"></div>
+      <div class="fld">
+        <label class="fld-lbl">Email <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/>
+          <span class="input-icon">✉</span>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="login-pw" placeholder="••••••••" autocomplete="current-password" style="padding-right:56px;"/>
+          <span class="input-toggle" onclick="togglePw('login-pw',this)">Show</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:-6px;">
+        <button class="btn-link" onclick="goPage('pg-forgot')">Forgot password?</button>
+      </div>
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">Sign In →</button>
+      <div class="divider"><div class="divider-line"></div><div class="divider-txt">OR</div><div class="divider-line"></div></div>
+      <button class="btn-ghost" onclick="goPage('pg-signup')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Create an account
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ PAGE: SIGN UP ════ -->
+  <div class="page auth-card" id="pg-signup">
+    <div class="auth-head">
+      <div class="step-row">
+        <div class="step-node"><div class="step-circle active" id="ss1">1</div><div class="step-label active">Account</div></div>
+        <div class="step-line" id="sl1"></div>
+        <div class="step-node"><div class="step-circle" id="ss2">2</div><div class="step-label">Verify</div></div>
+        <div class="step-line" id="sl2"></div>
+        <div class="step-node"><div class="step-circle" id="ss3">3</div><div class="step-label">Password</div></div>
+      </div>
+      <div class="auth-badge" style="margin-top:14px;"><span class="auth-badge-dot"></span>Step 1 of 3</div>
+      <div class="auth-title">Create <em>account</em></div>
+      <div class="auth-sub">Enter your details to get started with Q-A Runner</div>
+    </div>
+    <div class="auth-body">
+      <div id="signup-alert"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="fld">
+          <label class="fld-lbl">First Name <span class="req">*</span></label>
+          <input type="text" id="su-fname" placeholder="Jane"/>
+        </div>
+        <div class="fld">
+          <label class="fld-lbl">Last Name <span class="req">*</span></label>
+          <input type="text" id="su-lname" placeholder="Doe"/>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Work Email <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="su-email" placeholder="jane@company.com"/>
+          <span class="input-icon">✉</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="signup-btn" onclick="doSignup()">Verify Email →</button>
+    </div>
+    <div class="auth-foot">Already have an account? <a onclick="goPage('pg-login')">Sign in</a></div>
+  </div>
+
+  <!-- ════ PAGE: VERIFY EMAIL ════ -->
+  <div class="page auth-card" id="pg-verify">
+    <div class="auth-head">
+      <div class="step-row">
+        <div class="step-node"><div class="step-circle done">✓</div><div class="step-label">Account</div></div>
+        <div class="step-line done"></div>
+        <div class="step-node"><div class="step-circle active">2</div><div class="step-label active">Verify</div></div>
+        <div class="step-line"></div>
+        <div class="step-node"><div class="step-circle">3</div><div class="step-label">Password</div></div>
+      </div>
+      <div class="auth-badge" style="margin-top:14px;background:var(--sky-soft);border-color:rgba(14,165,233,0.22);color:var(--sky);"><span class="auth-badge-dot" style="background:var(--sky)"></span>Check your inbox</div>
+      <div class="auth-title">Verify your <em>email</em></div>
+      <div class="auth-sub">We sent a 6-digit code to <strong id="verify-email-display">—</strong></div>
+    </div>
+    <div class="auth-body">
+      <div id="verify-alert"></div>
+      <div class="fld">
+        <label class="fld-lbl">Verification Code</label>
+        <div class="otp-row">
+          <input class="otp-input" id="otp-0" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+          <input class="otp-input" id="otp-1" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+          <input class="otp-input" id="otp-2" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+          <span class="otp-sep">—</span>
+          <input class="otp-input" id="otp-3" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+          <input class="otp-input" id="otp-4" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+          <input class="otp-input" id="otp-5" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+        </div>
+        <div class="fld-hint" style="text-align:center;">Enter the 6-digit code — valid for 10 minutes</div>
+      </div>
+      <button class="btn-primary" id="verify-btn" onclick="doVerify()">Verify Code →</button>
+      <div class="resend-row">
+        Didn't receive it?
+        <button class="btn-link" id="resend-btn" onclick="doResend()" style="margin-left:5px;">Resend</button>
+        <span class="resend-count" id="resend-timer" style="display:none;margin-left:5px;"></span>
+      </div>
+    </div>
+    <div class="auth-foot"><a onclick="goPage('pg-signup')">← Back to account details</a></div>
+  </div>
+
+  <!-- ════ PAGE: SET PASSWORD ════ -->
+  <div class="page auth-card" id="pg-setpw">
+    <div class="auth-head">
+      <div class="step-row">
+        <div class="step-node"><div class="step-circle done">✓</div><div class="step-label">Account</div></div>
+        <div class="step-line done"></div>
+        <div class="step-node"><div class="step-circle done">✓</div><div class="step-label">Verify</div></div>
+        <div class="step-line done"></div>
+        <div class="step-node"><div class="step-circle active">3</div><div class="step-label active">Password</div></div>
+      </div>
+      <div class="auth-badge" style="margin-top:14px;background:var(--emerald-soft);border-color:rgba(16,185,129,0.22);color:var(--emerald);"><span class="auth-badge-dot" style="background:var(--emerald)"></span>Almost there</div>
+      <div class="auth-title">Set your <em>password</em></div>
+      <div class="auth-sub">Choose a strong password to secure your account</div>
+    </div>
+    <div class="auth-body">
+      <div id="setpw-alert"></div>
+      <div class="fld">
+        <label class="fld-lbl">New Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="spw-pw1" placeholder="••••••••" oninput="onPwInput()" style="padding-right:56px;"/>
+          <span class="input-toggle" onclick="togglePw('spw-pw1',this)">Show</span>
+        </div>
+        <div class="pw-strength">
+          <div class="pw-bar" id="pb1"></div><div class="pw-bar" id="pb2"></div>
+          <div class="pw-bar" id="pb3"></div><div class="pw-bar" id="pb4"></div>
+        </div>
+        <div class="pw-label" id="pw-strength-label">—</div>
+        <div class="pw-rules">
+          <div class="pw-rule" id="pr-len"><div class="pw-rule-dot"></div>At least 8 characters</div>
+          <div class="pw-rule" id="pr-num"><div class="pw-rule-dot"></div>Contains a number</div>
+          <div class="pw-rule" id="pr-sym"><div class="pw-rule-dot"></div>Contains a symbol</div>
+          <div class="pw-rule" id="pr-mix"><div class="pw-rule-dot"></div>Upper &amp; lowercase mix</div>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Confirm Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="spw-pw2" placeholder="••••••••" style="padding-right:56px;"/>
+          <span class="input-toggle" onclick="togglePw('spw-pw2',this)">Show</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="setpw-btn" onclick="doSetPw()">Create Account →</button>
+    </div>
+    <div class="auth-foot"><a onclick="goPage('pg-verify')">← Back to verification</a></div>
+  </div>
+
+  <!-- ════ PAGE: FORGOT PASSWORD ════ -->
+  <div class="page auth-card" id="pg-forgot">
+    <div class="auth-head">
+      <a class="back-link" onclick="goPage('pg-login')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Login
+      </a>
+      <div class="auth-badge" style="margin-top:12px;background:var(--amber-soft);border-color:rgba(245,158,11,0.22);color:var(--amber);"><span class="auth-badge-dot" style="background:var(--amber)"></span>Password Recovery</div>
+      <div class="auth-title">Reset your <em style="color:var(--amber)">password</em></div>
+      <div class="auth-sub">Enter your email and we'll send a reset code</div>
+    </div>
+    <div class="auth-body">
+      <div id="forgot-alert"></div>
+      <div class="fld">
+        <label class="fld-lbl">Email Address <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="email" id="fg-email" placeholder="you@example.com"/>
+          <span class="input-icon">✉</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="forgot-btn" onclick="doForgot()"
+        style="background:linear-gradient(135deg,#fcd34d 0%,#f59e0b 60%,#d97706 100%);box-shadow:0 6px 24px rgba(245,158,11,0.3);">
+        Send Reset Code →
+      </button>
+    </div>
+    <div class="auth-foot">Remember it? <a onclick="goPage('pg-login')">Sign in</a></div>
+  </div>
+
+  <!-- ════ PAGE: RESET PASSWORD ════ -->
+  <div class="page auth-card" id="pg-reset">
+    <div class="auth-head">
+      <div class="auth-badge" style="background:var(--amber-soft);border-color:rgba(245,158,11,0.22);color:var(--amber);"><span class="auth-badge-dot" style="background:var(--amber)"></span>Code sent</div>
+      <div class="auth-title">Enter reset <em style="color:var(--amber)">code</em></div>
+      <div class="auth-sub">Check <strong id="reset-email-display">—</strong> for your 6-digit reset code, then choose a new password.</div>
+    </div>
+    <div class="auth-body">
+      <div id="reset-alert"></div>
+      <div class="fld">
+        <label class="fld-lbl">Reset Code</label>
+        <div class="otp-row">
+          <input class="otp-input" id="rotp-0" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" id="rotp-1" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" id="rotp-2" maxlength="1" inputmode="numeric"/>
+          <span class="otp-sep">—</span>
+          <input class="otp-input" id="rotp-3" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" id="rotp-4" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" id="rotp-5" maxlength="1" inputmode="numeric"/>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">New Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="rpw-pw1" placeholder="••••••••" style="padding-right:56px;"/>
+          <span class="input-toggle" onclick="togglePw('rpw-pw1',this)">Show</span>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-lbl">Confirm Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="password" id="rpw-pw2" placeholder="••••••••" style="padding-right:56px;"/>
+          <span class="input-toggle" onclick="togglePw('rpw-pw2',this)">Show</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="reset-btn" onclick="doReset()"
+        style="background:linear-gradient(135deg,#fcd34d 0%,#f59e0b 60%,#d97706 100%);box-shadow:0 6px 24px rgba(245,158,11,0.3);">
+        Reset Password →
+      </button>
+    </div>
+    <div class="auth-foot"><a onclick="goPage('pg-forgot')">← Re-enter email</a></div>
+  </div>
+
+  <!-- ════ PAGE: SUCCESS ════ -->
+  <div class="page auth-card" id="pg-success">
+    <div class="auth-head">
+      <div class="success-ring">🎉</div>
+      <div class="auth-title" style="text-align:center;">You're all <em>set!</em></div>
+      <div class="auth-sub" style="text-align:center;">Your Q-A Runner account has been created.<br>Redirecting to the dashboard...</div>
+    </div>
+    <div class="auth-body">
+      <div class="alert alert-ok">
+        <span class="alert-icon">✓</span>
+        <div class="alert-body">Account verified &amp; password set. Signing you in automatically.</div>
+      </div>
+      <button class="btn-primary" onclick="enterDashboard()">Open Dashboard →</button>
+    </div>
+  </div>
+
+</div><!-- /auth-wrap -->
+
+<!-- ══════ DEV OTP TOAST — remove in production ══════ -->
+<div class="dev-toast" id="dev-toast">
+  <button class="dev-toast-close" onclick="document.getElementById('dev-toast').style.display='none'">✕</button>
+  <div class="dev-toast-tag">🔧 Dev — OTP Notification</div>
+  <div class="dev-toast-email" id="dev-toast-email"></div>
+  <div class="dev-toast-code"  id="dev-toast-code"></div>
+  <div class="dev-toast-hint">Auto-fills in <span id="dev-toast-countdown">3</span>s · Click ✕ to dismiss</div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   THEME
+════════════════════════════════════ */
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('qa-theme', t);
+  document.getElementById('tt-light').classList.toggle('active', t === 'light');
+  document.getElementById('tt-dark').classList.toggle('active',  t === 'dark');
+}
+(() => { setTheme(localStorage.getItem('qa-theme') || 'light'); })();
+
+/* ════════════════════════════════════
+   ROUTING
+════════════════════════════════════ */
+const PAGES = ['pg-login','pg-signup','pg-verify','pg-setpw','pg-forgot','pg-reset','pg-success'];
+let currentPage = 'pg-login';
+let flowEmail = '', flowForgotEmail = '';
+
+function goPage(id) {
+  PAGES.forEach(p => document.getElementById(p).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  currentPage = id;
+  window.scrollTo(0, 0);
+  ['login-alert','signup-alert','verify-alert','setpw-alert','forgot-alert','reset-alert'].forEach(a => {
+    const el = document.getElementById(a); if (el) el.innerHTML = '';
+  });
+}
+
+const hashMap = { login:'pg-login', signup:'pg-signup', verify:'pg-verify', setpw:'pg-setpw', forgot:'pg-forgot', reset:'pg-reset' };
+const initialPage = hashMap[window.location.hash.replace('#','')];
+if (initialPage) goPage(initialPage);
+
+/* ════════════════════════════════════
+   UTILITIES
+════════════════════════════════════ */
+function showAlert(containerId, type, msg) {
+  const icons = { err:'⛔', ok:'✓', info:'ℹ' };
+  document.getElementById(containerId).innerHTML =
+    `<div class="alert alert-${type}"><span class="alert-icon">${icons[type]||'ℹ'}</span><div class="alert-body">${msg}</div></div>`;
+}
+function clearAlert(id) { document.getElementById(id).innerHTML = ''; }
+
+function setBusy(btnId, busy, label = '') {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = busy;
+  btn.innerHTML = busy ? `<span class="spin"></span> Processing...` : label;
+}
+
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const shown = inp.type === 'text';
+  inp.type = shown ? 'password' : 'text';
+  btn.textContent = shown ? 'Show' : 'Hide';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ════════════════════════════════════
+   OTP INPUTS
+════════════════════════════════════ */
+function wireOtp(prefix) {
+  for (let i = 0; i < 6; i++) {
+    const inp = document.getElementById(prefix + i);
+    if (!inp) continue;
+    inp.addEventListener('input', () => {
+      inp.classList.toggle('filled', inp.value.length > 0);
+      if (inp.value.length === 1 && i < 5) document.getElementById(prefix + (i+1))?.focus();
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0)
+        document.getElementById(prefix + (i-1))?.focus();
+    });
+    inp.addEventListener('paste', e => {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      for (let j = 0; j < txt.length && j < 6; j++) {
+        const t = document.getElementById(prefix + j);
+        if (t) { t.value = txt[j]; t.classList.add('filled'); }
+      }
+      document.getElementById(prefix + Math.min(txt.length, 5))?.focus();
+    });
+  }
+}
+wireOtp('otp-');
+wireOtp('rotp-');
+
+function getOtp(prefix) {
+  let v = '';
+  for (let i = 0; i < 6; i++) v += (document.getElementById(prefix + i)?.value || '');
+  return v;
+}
+
+function fillOtp(prefix, code) {
+  for (let i = 0; i < 6; i++) {
+    const inp = document.getElementById(prefix + i);
+    if (inp) { inp.value = code[i] || ''; inp.classList.toggle('filled', !!code[i]); }
+  }
+}
+
+/* ════════════════════════════════════
+   PASSWORD STRENGTH
+════════════════════════════════════ */
+function onPwInput() {
+  const pw = document.getElementById('spw-pw1').value;
+  const rules = {
+    len: pw.length >= 8,
+    num: /\d/.test(pw),
+    sym: /[^a-zA-Z0-9]/.test(pw),
+    mix: /[a-z]/.test(pw) && /[A-Z]/.test(pw),
+  };
+  ['len','num','sym','mix'].forEach(r => {
+    const el  = document.getElementById('pr-'+r);
+    const dot = el?.querySelector('.pw-rule-dot');
+    el?.classList.toggle('ok', rules[r]);
+    if (dot) dot.textContent = rules[r] ? '✓' : '';
+  });
+  const score = Object.values(rules).filter(Boolean).length;
+  const labels  = ['','Weak','Fair','Good','Strong'];
+  const classes = ['','s1','s2','s3','s4'];
+  const colors  = ['','var(--rose)','var(--amber)','var(--sky)','var(--emerald)'];
+  for (let i = 1; i <= 4; i++) {
+    const bar = document.getElementById('pb'+i);
+    if (bar) bar.className = 'pw-bar' + (i <= score ? ' ' + classes[score] : '');
+  }
+  const lbl = document.getElementById('pw-strength-label');
+  if (lbl) { lbl.textContent = score > 0 ? labels[score] : '—'; lbl.style.color = colors[score]; }
+}
+
+/* ════════════════════════════════════
+   RESEND TIMER
+════════════════════════════════════ */
+let resendInterval = null;
+function startResendTimer(secs = 60) {
+  const btn   = document.getElementById('resend-btn');
+  const timer = document.getElementById('resend-timer');
+  if (!btn || !timer) return;
+  btn.style.display   = 'none';
+  timer.style.display = 'inline';
+  let remaining = secs;
+  clearInterval(resendInterval);
+  resendInterval = setInterval(() => {
+    remaining--;
+    timer.textContent = `(${remaining}s)`;
+    if (remaining <= 0) {
+      clearInterval(resendInterval);
+      btn.style.display   = 'inline';
+      timer.style.display = 'none';
+    }
+  }, 1000);
+}
+
+/* ════════════════════════════════════
+   DEV OTP TOAST
+   Polls /dev/otp and shows a bottom-right
+   notification with the code, then auto-fills
+   the OTP boxes after 3s.
+   REMOVE this entire block in production.
+════════════════════════════════════ */
+let _devFillPrefix  = '';
+let _devCountdown   = null;
+
+async function devCheckOtp(otpPrefix) {
+  try {
+    const d = await fetch('/dev/otp').then(r => r.json());
+    if (!d.ok) return;
+    // Only show if issued within the last 6 seconds
+    if (Date.now() / 1000 - d.ts > 6) return;
+
+    _devFillPrefix = otpPrefix;
+    document.getElementById('dev-toast-email').textContent = d.email;
+    document.getElementById('dev-toast-code').textContent  = d.code;
+    document.getElementById('dev-toast-countdown').textContent = '3';
+
+    const toast = document.getElementById('dev-toast');
+    toast.style.display = 'block';
+    // Reset animation
+    toast.style.animation = 'none';
+    toast.offsetHeight; // reflow
+    toast.style.animation = '';
+
+    // Countdown + auto-fill
+    let secs = 3;
+    clearInterval(_devCountdown);
+    _devCountdown = setInterval(() => {
+      secs--;
+      const el = document.getElementById('dev-toast-countdown');
+      if (el) el.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(_devCountdown);
+        fillOtp(_devFillPrefix, d.code);
+        toast.style.display = 'none';
+      }
+    }, 1000);
+  } catch {
+    // /dev/otp not available — silently ignore
+  }
+}
+
+/* ════════════════════════════════════
+   API HELPER
+════════════════════════════════════ */
+async function apiPost(path, body) {
+  const res = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}
+
+/* ════════════════════════════════════
+   FLOW: LOGIN
+════════════════════════════════════ */
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pw    = document.getElementById('login-pw').value;
+  if (!email || !pw) { showAlert('login-alert','err','Email and password are required.'); return; }
+
+  setBusy('login-btn', true);
+  clearAlert('login-alert');
+  try {
+    const data = await apiPost('/auth/login', { email, password: pw });
+    if (data.ok) {
+      window.location.href = '/';
+    } else {
+      showAlert('login-alert','err', escHtml(data.error || 'Invalid email or password.'));
+    }
+  } catch {
+    showAlert('login-alert','info','Demo mode: backend not connected. Redirecting...');
+    setTimeout(() => { window.location.href = '/'; }, 1500);
+  } finally {
+    setBusy('login-btn', false, 'Sign In →');
+  }
+}
+
+/* ════════════════════════════════════
+   FLOW: SIGNUP → VERIFY
+════════════════════════════════════ */
+async function doSignup() {
+  const fname = document.getElementById('su-fname').value.trim();
+  const lname = document.getElementById('su-lname').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  if (!fname || !lname || !email) { showAlert('signup-alert','err','All fields are required.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('signup-alert','err','Please enter a valid email address.'); return; }
+
+  setBusy('signup-btn', true);
+  clearAlert('signup-alert');
+  try {
+    const data = await apiPost('/auth/signup', { first_name: fname, last_name: lname, email });
+    if (data.ok) {
+      flowEmail = email;
+      document.getElementById('verify-email-display').textContent = email;
+      goPage('pg-verify');
+      startResendTimer(60);
+      setTimeout(() => devCheckOtp('otp-'), 400);  // DEV toast
+    } else {
+      showAlert('signup-alert','err', escHtml(data.error || 'Could not create account.'));
+    }
+  } catch {
+    // Demo fallback
+    flowEmail = email;
+    document.getElementById('verify-email-display').textContent = email;
+    goPage('pg-verify');
+    startResendTimer(60);
+    setTimeout(() => devCheckOtp('otp-'), 400);  // DEV toast
+    showAlert('verify-alert','info','Demo: use code <strong>123456</strong>');
+  } finally {
+    setBusy('signup-btn', false, 'Verify Email →');
+  }
+}
+
+/* ════════════════════════════════════
+   FLOW: VERIFY → SET PASSWORD
+════════════════════════════════════ */
+async function doVerify() {
+  const code = getOtp('otp-');
+  if (code.length < 6) { showAlert('verify-alert','err','Please enter the full 6-digit code.'); return; }
+
+  setBusy('verify-btn', true);
+  clearAlert('verify-alert');
+  try {
+    const data = await apiPost('/auth/verify', { email: flowEmail, code });
+    if (data.ok) {
+      goPage('pg-setpw');
+    } else {
+      showAlert('verify-alert','err', escHtml(data.error || 'Incorrect or expired code.'));
+    }
+  } catch {
+    if (code === '123456') { goPage('pg-setpw'); }
+    else { showAlert('verify-alert','err','Demo: enter 123456 to continue.'); }
+  } finally {
+    setBusy('verify-btn', false, 'Verify Code →');
+  }
+}
+
+async function doResend() {
+  clearAlert('verify-alert');
+  try {
+    await apiPost('/auth/resend', { email: flowEmail });
+    setTimeout(() => devCheckOtp('otp-'), 400);  // DEV toast
+  } catch {}
+  startResendTimer(60);
+  showAlert('verify-alert','ok','A new code has been sent to ' + escHtml(flowEmail));
+}
+
+/* ════════════════════════════════════
+   FLOW: SET PASSWORD → SUCCESS
+════════════════════════════════════ */
+async function doSetPw() {
+  const pw1 = document.getElementById('spw-pw1').value;
+  const pw2 = document.getElementById('spw-pw2').value;
+  if (!pw1 || !pw2) { showAlert('setpw-alert','err','Both password fields are required.'); return; }
+  if (pw1 !== pw2)  { showAlert('setpw-alert','err','Passwords do not match.'); return; }
+  if (pw1.length < 8) { showAlert('setpw-alert','err','Password must be at least 8 characters.'); return; }
+
+  setBusy('setpw-btn', true);
+  clearAlert('setpw-alert');
+  try {
+    const data = await apiPost('/auth/set-password', { email: flowEmail, password: pw1 });
+    if (data.ok) {
+      goPage('pg-success');
+      setTimeout(enterDashboard, 3000);
+    } else {
+      showAlert('setpw-alert','err', escHtml(data.error || 'Could not set password.'));
+    }
+  } catch {
+    goPage('pg-success');
+    setTimeout(enterDashboard, 3000);
+  } finally {
+    setBusy('setpw-btn', false, 'Create Account →');
+  }
+}
+
+function enterDashboard() { window.location.href = '/'; }
+
+/* ════════════════════════════════════
+   FLOW: FORGOT → RESET
+════════════════════════════════════ */
+async function doForgot() {
+  const email = document.getElementById('fg-email').value.trim();
+  if (!email) { showAlert('forgot-alert','err','Please enter your email address.'); return; }
+
+  setBusy('forgot-btn', true);
+  clearAlert('forgot-alert');
+  try {
+    const data = await apiPost('/auth/forgot-password', { email });
+    if (data.ok) {
+      flowForgotEmail = email;
+      document.getElementById('reset-email-display').textContent = email;
+      goPage('pg-reset');
+      setTimeout(() => devCheckOtp('rotp-'), 400);  // DEV toast
+    } else {
+      showAlert('forgot-alert','err', escHtml(data.error || 'Could not send reset code.'));
+    }
+  } catch {
+    flowForgotEmail = email;
+    document.getElementById('reset-email-display').textContent = email;
+    goPage('pg-reset');
+    setTimeout(() => devCheckOtp('rotp-'), 400);  // DEV toast
+    showAlert('reset-alert','info','Demo: use code <strong>654321</strong>');
+  } finally {
+    setBusy('forgot-btn', false, 'Send Reset Code →');
+  }
+}
+
+async function doReset() {
+  const code = getOtp('rotp-');
+  const pw1  = document.getElementById('rpw-pw1').value;
+  const pw2  = document.getElementById('rpw-pw2').value;
+  if (code.length < 6) { showAlert('reset-alert','err','Please enter the full 6-digit reset code.'); return; }
+  if (!pw1 || !pw2)    { showAlert('reset-alert','err','Both password fields are required.'); return; }
+  if (pw1 !== pw2)     { showAlert('reset-alert','err','Passwords do not match.'); return; }
+  if (pw1.length < 8)  { showAlert('reset-alert','err','Password must be at least 8 characters.'); return; }
+
+  setBusy('reset-btn', true);
+  clearAlert('reset-alert');
+  try {
+    const data = await apiPost('/auth/reset-password', { email: flowForgotEmail, code, password: pw1 });
+    if (data.ok) {
+      goPage('pg-login');
+      showAlert('login-alert','ok','Password reset successfully — please sign in.');
+    } else {
+      showAlert('reset-alert','err', escHtml(data.error || 'Invalid or expired code.'));
+    }
+  } catch {
+    if (code === '654321') {
+      goPage('pg-login');
+      showAlert('login-alert','ok','Password reset successfully — please sign in.');
+    } else {
+      showAlert('reset-alert','err','Demo: enter 654321 to continue.');
+    }
+  } finally {
+    setBusy('reset-btn', false, 'Reset Password →');
+  }
+}
+
+/* ════════════════════════════════════
+   KEYBOARD ENTER
+════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const actions = {
+    'pg-login':  doLogin,
+    'pg-signup': doSignup,
+    'pg-verify': doVerify,
+    'pg-setpw':  doSetPw,
+    'pg-forgot': doForgot,
+    'pg-reset':  doReset,
+  };
+  actions[currentPage]?.();
+});
+</script>
+</body>
+</html>
