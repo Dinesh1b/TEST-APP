@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+  terminal.html — Jinja2 template rendered by Flask.
+  Standalone full-page live output terminal.
+
+  SSE is NOT auto-started.  Trigger via:
+    (a) postMessage: { type: 'qa-start-stream' }   ← from index.html iframe
+    (b) URL param:   /terminal?autostart=1          ← direct page access
+
+  Script load order:
+    utils.js      → shared helpers (escHtml, logClass, tsNow…)
+    terminal.js   → SSE, log rendering, toolbar actions
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Q-Audit · Live Output</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/terminal.css') }}"/>
+</head>
+<body>
+
+<!-- ══════ TOP BAR ══════ -->
+<div class="bar">
+  <div class="bar-mark">QA</div>
+  <div class="bar-name">Q<em>-</em>Audit</div>
+  <div class="bar-sep"></div>
+  <div class="bar-sub">Live Output</div>
+  <div class="bar-right">
+    <div class="chip" id="chip">
+      <span class="pip"></span>
+      <span id="chipTxt">WAITING</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PROGRESS ══════ -->
+<div class="prog-wrap">
+  <div class="prog-top">
+    <span class="prog-lbl" id="pLabel">Waiting for run...</span>
+    <span class="prog-pct" id="pPct"></span>
+  </div>
+  <div class="prog-track">
+    <div class="prog-fill" id="pFill"></div>
+  </div>
+</div>
+
+<!-- ══════ TOOLBAR ══════ -->
+<div class="toolbar">
+  <button class="tbtn" onclick="document.getElementById('term').scrollTop = 1e9">↓ Bottom</button>
+  <button class="tbtn" onclick="document.getElementById('term').scrollTop = 0">↑ Top</button>
+  <button class="tbtn" onclick="clearT()">✕ Clear</button>
+  <div class="tb-sep"></div>
+  <button class="tbtn stop" onclick="fetch('/stop',{method:'POST'}); window.finishRun('error')">◼ Stop</button>
+  <div class="tb-sep"></div>
+  <button class="tbtn copy" onclick="copyAll()">⎘ Copy</button>
+  <button class="tbtn" onclick="saveLog()">⬇ Save</button>
+  <div class="tb-stats">
+    OK&nbsp;<span class="sv-ok" id="sOk">0</span>
+    &nbsp;&nbsp;
+    ERR&nbsp;<span class="sv-err" id="sErr">0</span>
+    &nbsp;&nbsp;
+    LINES&nbsp;<span id="sLines">0</span>
+  </div>
+</div>
+
+<!-- ══════ TERMINAL ══════ -->1
+<div class="term" id="term">
+  <span class="line skip">// Waiting for run to start — listening for postMessage or ?autostart=1…</span>
+</div>
+
+<!-- ══════ FOOTER ══════ -->
+<div class="foot">
+  <span class="foot-txt" id="footTxt">IDLE</span>
+  <span class="foot-right" id="footR">0 lines · 0s</span>
+</div>
+
+<!-- ══════ Scripts — utils first, then terminal logic ══════ -->
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/terminal.js') }}"></script>
+</body>
+</html>

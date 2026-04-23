@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample E-Commerce Application Test Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            border-bottom: 3px solid #2196F3;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2196F3;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .summary-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .summary-card.total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .summary-card.passed {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        
+        .summary-card.failed {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+        
+        .summary-card.skipped {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+        
+        .summary-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+        
+        .summary-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .metrics {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .metrics h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .test-results {
+            margin-top: 30px;
+        }
+        
+        .test-results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .test-case {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #ccc;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-case:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-case.passed {
+            border-left-color: #4CAF50;
+        }
+        
+        .test-case.failed {
+            border-left-color: #f44336;
+        }
+        
+        .test-case.skipped {
+            border-left-color: #FF9800;
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .test-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .test-status.passed {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .test-status.failed {
+            background: #f44336;
+            color: white;
+        }
+        
+        .test-status.skipped {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .test-details {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .test-error {
+            background: #ffebee;
+            border: 1px solid #ef5350;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #c62828;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .screenshot {
+            margin-top: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .pass-rate-bar {
+            width: 100%;
+            height: 30px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .pass-rate-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sample E-Commerce Application Test Report</h1>
+            <div class="meta">
+                <p>Generated: 2026-02-02 09:56:00</p>
+                <p>Duration: 0.00 seconds</p>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-card total">
+                <h3>25</h3>
+                <p>Total Tests</p>
+            </div>
+            <div class="summary-card passed">
+                <h3>20</h3>
+                <p>Passed</p>
+            </div>
+            <div class="summary-card failed">
+                <h3>3</h3>
+                <p>Failed</p>
+            </div>
+            <div class="summary-card skipped">
+                <h3>2</h3>
+                <p>Skipped</p>
+            </div>
+        </div>
+        
+        <div class="metrics">
+            <h2>Test Metrics</h2>
+            <div class="metric-item">
+                <span class="metric-label">Pass Rate</span>
+                <span class="metric-value">80.0%</span>
+            </div>
+            <div class="pass-rate-bar">
+                <div class="pass-rate-fill" style="width: 80.0%">
+                    80.0%
+                </div>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Total Duration</span>
+                <span class="metric-value">0.00s</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Average Test Duration</span>
+                <span class="metric-value">3.44s</span>
+            </div>
+        </div>
+        
+        <div class="test-results">
+            <h2>Test Results</h2>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">User Authentication - Valid Login</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.34s | Timestamp: 2026-02-02T09:56:00.137835
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">User Authentication - Invalid Password</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 1.89s | Timestamp: 2026-02-02T09:56:00.137851
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Product Search - Search by Name</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 3.12s | Timestamp: 2026-02-02T09:56:00.137853
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Product Search - Filter by Category</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.56s | Timestamp: 2026-02-02T09:56:00.137855
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Shopping Cart - Add Single Product</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.78s | Timestamp: 2026-02-02T09:56:00.137856
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Shopping Cart - Add Multiple Products</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 4.23s | Timestamp: 2026-02-02T09:56:00.137857
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Shopping Cart - Remove Product</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.01s | Timestamp: 2026-02-02T09:56:00.137858
+                </div>
+
+            </div>
+
+            <div class="test-case failed">
+                <div class="test-header">
+                    <span class="test-name">Checkout Process - Guest Checkout</span>
+                    <span class="test-status failed">failed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 5.67s | Timestamp: 2026-02-02T09:56:00.137859
+                </div>
+
+                <div class="test-error">AssertionError: Payment confirmation message not displayed
+    Expected: "Order confirmed! Your order number is #12345"
+    Actual: "Payment processing..."
+    
+    at test_checkout.py:78
+    at verify_order_confirmation()</div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Checkout Process - Registered User Checkout</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 4.89s | Timestamp: 2026-02-02T09:56:00.137860
+                </div>
+
+            </div>
+
+            <div class="test-case failed">
+                <div class="test-header">
+                    <span class="test-name">Payment Gateway - Credit Card Payment</span>
+                    <span class="test-status failed">failed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 3.45s | Timestamp: 2026-02-02T09:56:00.137861
+                </div>
+
+                <div class="test-error">TimeoutError: Payment gateway response timeout
+    Waited for: 30 seconds
+    Expected element: .payment-success
+    
+    at test_payment.py:45
+    The payment provider may be experiencing issues.</div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Payment Gateway - PayPal Payment</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 6.12s | Timestamp: 2026-02-02T09:56:00.137966
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">User Profile - Update Personal Information</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 3.34s | Timestamp: 2026-02-02T09:56:00.137972
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">User Profile - Change Password</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.67s | Timestamp: 2026-02-02T09:56:00.137973
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Order History - View Past Orders</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.89s | Timestamp: 2026-02-02T09:56:00.137975
+                </div>
+
+            </div>
+
+            <div class="test-case skipped">
+                <div class="test-header">
+                    <span class="test-name">Order History - Reorder Previous Items</span>
+                    <span class="test-status skipped">skipped</span>
+                </div>
+                <div class="test-details">
+                    Duration: 0.00s | Timestamp: 2026-02-02T09:56:00.137976
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Product Reviews - Submit Review</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 3.56s | Timestamp: 2026-02-02T09:56:00.137978
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Product Reviews - Edit Review</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.91s | Timestamp: 2026-02-02T09:56:00.137979
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Wishlist - Add to Wishlist</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.12s | Timestamp: 2026-02-02T09:56:00.137981
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Wishlist - Move to Cart</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 2.45s | Timestamp: 2026-02-02T09:56:00.137982
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Mobile Responsiveness - iPhone 12 Viewport</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 4.67s | Timestamp: 2026-02-02T09:56:00.137983
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Mobile Responsiveness - iPad Viewport</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 4.23s | Timestamp: 2026-02-02T09:56:00.137985
+                </div>
+
+            </div>
+
+            <div class="test-case failed">
+                <div class="test-header">
+                    <span class="test-name">Performance - Page Load Time</span>
+                    <span class="test-status failed">failed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 8.91s | Timestamp: 2026-02-02T09:56:00.137986
+                </div>
+
+                <div class="test-error">Performance Assertion Failed
+    Expected page load time: < 3 seconds
+    Actual page load time: 8.91 seconds
+    
+    The homepage is loading slower than the 3-second threshold.
+    Possible causes:
+    - Large image sizes
+    - Unoptimized JavaScript bundles
+    - Third-party script delays</div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Accessibility - Keyboard Navigation</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 5.34s | Timestamp: 2026-02-02T09:56:00.137988
+                </div>
+
+            </div>
+
+            <div class="test-case skipped">
+                <div class="test-header">
+                    <span class="test-name">Accessibility - Screen Reader Support</span>
+                    <span class="test-status skipped">skipped</span>
+                </div>
+                <div class="test-details">
+                    Duration: 0.00s | Timestamp: 2026-02-02T09:56:00.137992
+                </div>
+
+            </div>
+
+            <div class="test-case passed">
+                <div class="test-header">
+                    <span class="test-name">Security - SQL Injection Prevention</span>
+                    <span class="test-status passed">passed</span>
+                </div>
+                <div class="test-details">
+                    Duration: 3.78s | Timestamp: 2026-02-02T09:56:00.137994
+                </div>
+
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p>Automated Test Report - Generated by Playwright Python Framework</p>
+        </div>
+    </div>
+</body>
+</html>
