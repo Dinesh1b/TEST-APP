@@ -5,6 +5,8 @@ Creates and configures the Flask app with all blueprints registered.
 import os
 import secrets
 from flask import Flask
+from .services.db import init_db, init_auth_db
+
 
 def create_app():
     """Create and configure the Flask application."""
@@ -19,7 +21,6 @@ def create_app():
     app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
     # Initialize databases
-    from .services.db import init_db, init_auth_db
     init_db()
     init_auth_db()
 
@@ -35,6 +36,7 @@ def create_app():
     app.register_blueprint(uploads_bp)
 
     return app
+
 
 # ---------------------------------------------------------------------------
 # Entry point
