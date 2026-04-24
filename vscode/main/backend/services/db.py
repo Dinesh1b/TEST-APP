@@ -9,7 +9,7 @@ Manages two SQLite databases:
 import os
 import time
 import sqlite3
-from vscode.main.backend.services.db import init_db, init_auth_db
+
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _DATA_DIR = os.path.join(os.path.dirname(_HERE), "data")
 os.makedirs(_DATA_DIR, exist_ok=True)
