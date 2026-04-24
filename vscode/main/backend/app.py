@@ -24,15 +24,15 @@ def create_app():
     app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
     # Initialize databases
-    from backend.services.db import init_db, init_auth_db
+   from .services.db import init_db, init_auth_db
     init_db()
     init_auth_db()
 
     # Register blueprints
-    from backend.blueprints.pages import pages_bp
-    from backend.blueprints.auth import auth_bp
-    from backend.blueprints.runner import runner_bp
-    from backend.blueprints.uploads import uploads_bp
+    from .blueprints.pages import pages_bp
+    from .blueprints.auth import auth_bp
+    from .blueprints.runner import runner_bp
+    from .blueprints.uploads import uploads_bp
 
     app.register_blueprint(pages_bp)
     app.register_blueprint(auth_bp)
