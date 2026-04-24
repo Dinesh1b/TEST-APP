@@ -8,7 +8,7 @@ import os
 import secrets
 
 from flask import Flask
-
+from .services.db import init_db, init_auth_db
 
 def create_app():
     """Create and configure the Flask application."""
