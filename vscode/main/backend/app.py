@@ -1,15 +1,10 @@
 """
 app.py — Q-Audit Runner Flask Application Factory.
-
 Creates and configures the Flask app with all blueprints registered.
 """
-
 import os
 import secrets
-
 from flask import Flask
-from your_module import app
-from .services.db import init_db, init_auth_db
 
 def create_app():
     """Create and configure the Flask application."""
@@ -24,7 +19,7 @@ def create_app():
     app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
     # Initialize databases
-   from .services.db import init_db, init_auth_db
+    from .services.db import init_db, init_auth_db
     init_db()
     init_auth_db()
 
@@ -41,13 +36,11 @@ def create_app():
 
     return app
 
-
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import sys
-    # Add parent directory to sys.path so 'backend' is findable
     _root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     if _root not in sys.path:
         sys.path.insert(0, _root)
