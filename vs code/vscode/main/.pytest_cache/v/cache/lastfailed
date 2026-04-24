@@ -1,0 +1,5 @@
+{
+  "audit/Audit_Summary_Report.py::TestAuditReportExtraction::test_page_loads": true,
+  "audit/Audit_Summary_Report.py::TestAuditReportExtraction::test_row_count": true,
+  "audit/Audit_Summary_Report.py::TestAuditReportExtraction::test_extract_all_rows": true
+}
