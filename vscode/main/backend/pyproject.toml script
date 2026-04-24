@@ -1,3 +1,0 @@
-[tool.vercel]
-[tool.vercel.scripts]
-app = "your_module:app"
